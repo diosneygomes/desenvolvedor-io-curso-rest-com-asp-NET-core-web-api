@@ -33,7 +33,8 @@ namespace DevIO.Api.Controllers
         {
             var fornecedores = this._mapper
                 .Map<IEnumerable<FornecedorViewModel>>(await this._fornecedorRepository
-                    .ObterTodos());
+                    .ObterTodos()
+                    .ConfigureAwait(false));
 
             return fornecedores;
         }
@@ -41,7 +42,8 @@ namespace DevIO.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> ObterPorId(Guid id)
         {
-            var fornecedor = await this.ObterFornecedorProdutosEndereco(id);
+            var fornecedor = await this.ObterFornecedorProdutosEndereco(id)
+                .ConfigureAwait(false);
 
             if (fornecedor is null)
             {
@@ -60,7 +62,8 @@ namespace DevIO.Api.Controllers
             }
 
             await this._fornecedorService
-                .Adicionar(this._mapper.Map<Fornecedor>(fornecedorViewModel));
+                .Adicionar(this._mapper.Map<Fornecedor>(fornecedorViewModel))
+                .ConfigureAwait(false);
 
             return this.CustomResponse(fornecedorViewModel);
         }
@@ -81,7 +84,8 @@ namespace DevIO.Api.Controllers
             }
 
             await this._fornecedorService
-                .Atualizar(this._mapper.Map<Fornecedor>(fornecedorViewModel));
+                .Atualizar(this._mapper.Map<Fornecedor>(fornecedorViewModel))
+                .ConfigureAwait(false);
 
             return this.CustomResponse(fornecedorViewModel);
         }
@@ -89,7 +93,8 @@ namespace DevIO.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> Excluir(Guid id)
         {
-            var fornecedorViewModel = await this.ObterFornecedorEndereco(id);
+            var fornecedorViewModel = await this.ObterFornecedorEndereco(id)
+                .ConfigureAwait(false);
 
             if (fornecedorViewModel is null)
             {
@@ -97,7 +102,8 @@ namespace DevIO.Api.Controllers
             }
 
             await this._fornecedorService
-                .Remover(id);
+                .Remover(id)
+                .ConfigureAwait(false);
 
             return this.CustomResponse(fornecedorViewModel);
         }
@@ -105,7 +111,10 @@ namespace DevIO.Api.Controllers
         [HttpGet("endereco/{id:guid}")]
         public async Task<EnderecoViewModel> ObterEnderecoPorId(Guid id)
         {
-            return this._mapper.Map<EnderecoViewModel>(await this._enderecoRepository.ObterPorId(id));
+            return this._mapper
+                .Map<EnderecoViewModel>(await this._enderecoRepository
+                    .ObterPorId(id)
+                    .ConfigureAwait(false));
         }
 
         [HttpPut("endereco/{id:guid}")]
@@ -121,7 +130,10 @@ namespace DevIO.Api.Controllers
 
             if (!this.ModelState.IsValid) return CustomResponse(this.ModelState);
 
-            await this._fornecedorService.AtualizarEndereco(this._mapper.Map<Endereco>(enderecoViewModel));
+            await this._fornecedorService
+                .AtualizarEndereco(this._mapper
+                    .Map<Endereco>(enderecoViewModel))
+                    .ConfigureAwait(false);
 
             return CustomResponse(enderecoViewModel);
         }
@@ -130,14 +142,16 @@ namespace DevIO.Api.Controllers
         {
             return this._mapper
                 .Map<FornecedorViewModel>(await this._fornecedorRepository
-                    .ObterFornecedorProdutosEndereco(id));
+                    .ObterFornecedorProdutosEndereco(id)
+                    .ConfigureAwait(false));
         }
 
         public async Task<FornecedorViewModel> ObterFornecedorEndereco(Guid id)
         {
             return this._mapper
                 .Map<FornecedorViewModel>(await this._fornecedorRepository
-                    .ObterFornecedorEndereco(id));
+                    .ObterFornecedorEndereco(id)
+                    .ConfigureAwait(false));
         }
     }
 }
