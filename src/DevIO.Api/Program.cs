@@ -17,7 +17,14 @@ builder.Services.AddDbContext<MeuDbContext>(options =>
 });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.Services.ResolveDependencies();
+
+builder.Services.AddCors(options =>
+	options.AddPolicy("Development", builder => builder
+	.AllowAnyOrigin()
+	.AllowAnyHeader()
+	.AllowCredentials()));
 
 var app = builder.Build();
 
@@ -27,6 +34,8 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+
+app.UseCors("Development");
 
 app.UseHttpsRedirection();
 
