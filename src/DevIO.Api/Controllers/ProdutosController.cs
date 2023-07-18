@@ -49,7 +49,8 @@ namespace DevIO.Api.Controllers
 
             return produtoViewModel;
         }
-
+        
+        [ClaimsAuthorize("Produto", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<ProdutoViewModel>> Adicionar(ProdutoViewModel produtoViewModel)
         {
@@ -77,7 +78,7 @@ namespace DevIO.Api.Controllers
 
         }
 
-        //[ClaimsAuthorize("Produto", "Atualizar")]
+        [ClaimsAuthorize("Produto", "Atualizar")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Atualizar(Guid id, ProdutoViewModel produtoViewModel)
         {
@@ -116,7 +117,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoViewModel);
         }
 
-
+        [ClaimsAuthorize("Produto", "Excluir")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<ProdutoViewModel>> Excluir(Guid id)
         {
@@ -172,6 +173,7 @@ namespace DevIO.Api.Controllers
 
         #region UploadAlternativo
 
+        [ClaimsAuthorize("Produto", "Adicionar")]
         [HttpPost("Adicionar")]
         public async Task<ActionResult<ProdutoViewModel>> AdicionarAlternativo(
             [ModelBinder(BinderType = typeof(ProdutoModelBinder))]
