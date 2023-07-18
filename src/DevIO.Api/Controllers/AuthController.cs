@@ -65,7 +65,7 @@ namespace DevIO.Api.Controllers
 
             if (result.Succeeded)
             {
-                return CustomResponse(loginUser);
+                return CustomResponse(await GerarJwt(loginUser.Email));
             }
             if (result.IsLockedOut)
             {
