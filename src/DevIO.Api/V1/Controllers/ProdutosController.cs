@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
+using DevIO.Api.Controllers;
 using DevIO.Api.Extensions;
 using DevIO.Api.ViewModels;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
-using DevIO.Business.Notificacoes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIO.Api.Controllers
+namespace DevIO.Api.V1.Controllers
 {
     [Authorize]
-    [Route("api/produtos")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/produtos")]
     public class ProdutosController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;
@@ -24,16 +25,16 @@ namespace DevIO.Api.Controllers
             IMapper mapper,
             IUser user) : base(notificador, user)
         {
-            this._produtoService = produtoService;
-            this._produtoRepository = produtoRepository;
-            this._mapper = mapper;
+            _produtoService = produtoService;
+            _produtoRepository = produtoRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IEnumerable<ProdutoViewModel>> ObterTodos()
         {
-            return this._mapper
-                .Map<IEnumerable<ProdutoViewModel>>(await this._produtoRepository
+            return _mapper
+                .Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository
                     .ObterProdutosFornecedores()
                     .ConfigureAwait(false));
         }
@@ -41,42 +42,42 @@ namespace DevIO.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<ProdutoViewModel>> ObterPorId(Guid id)
         {
-            var produtoViewModel = await this.ObterProduto(id)
+            var produtoViewModel = await ObterProduto(id)
                 .ConfigureAwait(false);
 
             if (produtoViewModel is null)
             {
-                return this.NotFound();
+                return NotFound();
             }
 
             return produtoViewModel;
         }
-        
+
         [ClaimsAuthorize("Produto", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<ProdutoViewModel>> Adicionar(ProdutoViewModel produtoViewModel)
         {
             if (!ModelState.IsValid)
             {
-                return this.CustomResponse(ModelState);
+                return CustomResponse(ModelState);
             }
 
             var imagemNome = string.Format("{0}_{1}",
                 Guid.NewGuid().ToString(),
                 produtoViewModel.Imagem);
 
-            if (!this.UploadArquivo(produtoViewModel.ImagemUpload, imagemNome))
+            if (!UploadArquivo(produtoViewModel.ImagemUpload, imagemNome))
             {
-                return this.CustomResponse(produtoViewModel);
+                return CustomResponse(produtoViewModel);
             }
 
             produtoViewModel.Imagem = imagemNome;
 
-            await this._produtoService
-                .Adicionar(this._mapper.Map<Produto>(produtoViewModel))
+            await _produtoService
+                .Adicionar(_mapper.Map<Produto>(produtoViewModel))
                 .ConfigureAwait(false);
 
-            return this.CustomResponse(produtoViewModel);
+            return CustomResponse(produtoViewModel);
 
         }
 
@@ -123,15 +124,15 @@ namespace DevIO.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<ProdutoViewModel>> Excluir(Guid id)
         {
-            var produtoViewModel = await this.ObterProduto(id)
+            var produtoViewModel = await ObterProduto(id)
                 .ConfigureAwait(false);
 
             if (produtoViewModel is null)
             {
-                return this.NotFound();
+                return NotFound();
             }
 
-            await this._produtoRepository.Remover(id)
+            await _produtoRepository.Remover(id)
                 .ConfigureAwait(false);
 
             return CustomResponse(produtoViewModel);
@@ -139,8 +140,8 @@ namespace DevIO.Api.Controllers
 
         public async Task<ProdutoViewModel> ObterProduto(Guid id)
         {
-            return this._mapper
-                .Map<ProdutoViewModel>(await this._produtoRepository
+            return _mapper
+                .Map<ProdutoViewModel>(await _produtoRepository
                     .ObterProdutoFornecedor(id)
                     .ConfigureAwait(false));
         }

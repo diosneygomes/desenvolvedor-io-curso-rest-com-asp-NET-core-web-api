@@ -19,12 +19,12 @@ namespace DevIO.Api.Controllers
             IUser appUser)
         {
             this._notificador = _notificador;
-            this._appUser = appUser;
+            _appUser = appUser;
 
             if (appUser.IsAuthenticated())
             {
-                this.UsuarioId = appUser.GetUserId();
-                this.UsuarioAutenticado = true;
+                UsuarioId = appUser.GetUserId();
+                UsuarioAutenticado = true;
             }
         }
 
@@ -35,12 +35,12 @@ namespace DevIO.Api.Controllers
 
         protected ActionResult CustomResponse(object? result = null)
         {
-            if (this.OperacaoValida())
+            if (OperacaoValida())
             {
                 return Ok(
                     new
                     {
-                        success= true,
+                        success = true,
                         data = result
                     });
             }
@@ -55,17 +55,17 @@ namespace DevIO.Api.Controllers
                 });
         }
 
-        protected ActionResult CustomResponse (ModelStateDictionary modelState)
+        protected ActionResult CustomResponse(ModelStateDictionary modelState)
         {
             if (!modelState.IsValid)
             {
-                this.NotificarErroModelInvalida(modelState);
+                NotificarErroModelInvalida(modelState);
             }
 
             return View(modelState);
         }
 
-        protected void NotificarErroModelInvalida (ModelStateDictionary modelState)
+        protected void NotificarErroModelInvalida(ModelStateDictionary modelState)
         {
             var erros = modelState.Values
                 .SelectMany(e => e.Errors);
@@ -82,7 +82,7 @@ namespace DevIO.Api.Controllers
 
         protected void NotificarErro(string mensagem)
         {
-            this._notificador
+            _notificador
                 .Handle(new Notificacao(mensagem));
         }
     }

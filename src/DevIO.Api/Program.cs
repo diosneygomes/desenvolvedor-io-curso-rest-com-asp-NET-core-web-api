@@ -18,6 +18,8 @@ builder.Services.AddIdentityConfig(builder.Configuration);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddApiConfig();
+
 builder.Services.ResolveDependencies();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -25,12 +27,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 
 });
-
-//builder.Services.AddCors(options =>
-//	options.AddPolicy("Development", builder => builder
-//	.AllowAnyOrigin()
-//	.AllowAnyHeader()
-//	.AllowCredentials()));
 
 var app = builder.Build();
 
