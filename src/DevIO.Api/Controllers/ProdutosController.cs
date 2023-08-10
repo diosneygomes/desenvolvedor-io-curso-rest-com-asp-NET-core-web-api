@@ -3,6 +3,7 @@ using DevIO.Api.Extensions;
 using DevIO.Api.ViewModels;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
+using DevIO.Business.Notificacoes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,14 +18,15 @@ namespace DevIO.Api.Controllers
         private readonly IMapper _mapper;
 
         public ProdutosController(
-            INotificador _notificador,
-            IProdutoRepository _produtoRepository,
+            INotificador notificador,
+            IProdutoRepository produtoRepository,
             IProdutoService produtoService,
-            IMapper _mapper) : base(_notificador)
+            IMapper mapper,
+            IUser user) : base(notificador, user)
         {
             this._produtoService = produtoService;
-            this._produtoRepository = _produtoRepository;
-            this._mapper = _mapper;
+            this._produtoRepository = produtoRepository;
+            this._mapper = mapper;
         }
 
         [HttpGet]

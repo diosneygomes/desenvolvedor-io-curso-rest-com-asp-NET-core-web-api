@@ -26,11 +26,11 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 });
 
-builder.Services.AddCors(options =>
-	options.AddPolicy("Development", builder => builder
-	.AllowAnyOrigin()
-	.AllowAnyHeader()
-	.AllowCredentials()));
+//builder.Services.AddCors(options =>
+//	options.AddPolicy("Development", builder => builder
+//	.AllowAnyOrigin()
+//	.AllowAnyHeader()
+//	.AllowCredentials()));
 
 var app = builder.Build();
 
