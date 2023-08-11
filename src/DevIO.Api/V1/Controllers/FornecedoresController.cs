@@ -147,7 +147,7 @@ namespace DevIO.Api.V1.Controllers
             return CustomResponse(enderecoViewModel);
         }
 
-        public async Task<FornecedorViewModel> ObterFornecedorProdutosEndereco(Guid id)
+        private async Task<FornecedorViewModel> ObterFornecedorProdutosEndereco(Guid id)
         {
             return _mapper
                 .Map<FornecedorViewModel>(await _fornecedorRepository
@@ -155,7 +155,7 @@ namespace DevIO.Api.V1.Controllers
                     .ConfigureAwait(false));
         }
 
-        public async Task<FornecedorViewModel> ObterFornecedorEndereco(Guid id)
+        private async Task<FornecedorViewModel> ObterFornecedorEndereco(Guid id)
         {
             return _mapper
                 .Map<FornecedorViewModel>(await _fornecedorRepository

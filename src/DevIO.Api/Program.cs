@@ -1,6 +1,7 @@
 using DevIO.Api.Configuration;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,6 @@ builder.Services.AddDbContext<MeuDbContext>(options =>
 builder.Services.AddIdentityConfig(builder.Configuration);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 builder.Services.AddApiConfig();
 
 builder.Services.ResolveDependencies();
@@ -30,13 +30,10 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-	app.UseSwagger();
-	app.UseSwaggerUI();
-}
+var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
 app.UseApiConfig(app.Environment);
+
+app.UseSwaggerConfig(apiVersionDescriptionProvider);
 
 app.Run();

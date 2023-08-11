@@ -138,7 +138,7 @@ namespace DevIO.Api.V1.Controllers
             return CustomResponse(produtoViewModel);
         }
 
-        public async Task<ProdutoViewModel> ObterProduto(Guid id)
+        private async Task<ProdutoViewModel> ObterProduto(Guid id)
         {
             return _mapper
                 .Map<ProdutoViewModel>(await _produtoRepository
@@ -167,11 +167,6 @@ namespace DevIO.Api.V1.Controllers
             System.IO.File.WriteAllBytes(filePath, imageDataByteArray);
 
             return true;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         #region UploadAlternativo
