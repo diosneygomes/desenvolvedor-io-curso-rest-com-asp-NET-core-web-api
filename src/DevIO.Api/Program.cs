@@ -23,6 +23,8 @@ builder.Services.AddApiConfig();
 
 builder.Services.AddSwaggerConfig();
 
+builder.Services.AddLoggingConfig(builder.Configuration);
+
 builder.Services.ResolveDependencies();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
@@ -38,5 +40,7 @@ var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionD
 app.UseApiConfig(app.Environment);
 
 app.UseSwaggerConfig(apiVersionDescriptionProvider);
+
+app.UseLoggingConfiguration();
 
 app.Run();

@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevIO.Api.Extensions;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DevIO.Api.Configuration
 {
@@ -62,7 +65,7 @@ namespace DevIO.Api.Configuration
                 app.UseHsts();
             }
 
-            //app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 
@@ -76,20 +79,20 @@ namespace DevIO.Api.Configuration
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapHealthChecks("/api/hc", new HealthCheckOptions()
-                //{
-                //    Predicate = _ => true,
-                //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                //});
-                //endpoints.MapHealthChecksUI(options =>
-                //{
-                //    options.UIPath = "/api/hc-ui";
-                //    options.ResourcesPath = "/api/hc-ui-resources";
+                endpoints.MapHealthChecks("/api/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI(options =>
+                {
+                    options.UIPath = "/api/hc-ui";
+                    options.ResourcesPath = "/api/hc-ui-resources";
 
-                //    options.UseRelativeApiPath = false;
-                //    options.UseRelativeResourcesPath = false;
-                //    options.UseRelativeWebhookPath = false;
-                //});
+                    options.UseRelativeApiPath = false;
+                    options.UseRelativeResourcesPath = false;
+                    options.UseRelativeWebhookPath = false;
+                });
 
             });
 
